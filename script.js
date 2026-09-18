@@ -219,47 +219,96 @@ window.addEventListener("scroll", () => {
    MUSIC
 ========================================= */
 
-const musicBtn =
-    document.getElementById("musicBtn");
-
-const music =
-    document.getElementById("backgroundMusic");
-
-let musicPlaying = false;
+const music = document.getElementById("backgroundMusic");
+const musicBtn = document.getElementById("musicBtn");
 
 
-musicBtn.addEventListener("click", () => {
-
-    if (!music.src) {
-
-        alert(
-            "Add your music file in index.html first."
-        );
-
-        return;
-
-    }
+let musicStarted = false;
 
 
-    if (musicPlaying) {
+/* -----------------------------------------
+   START MUSIC WHEN OPEN BUTTON IS CLICKED
+----------------------------------------- */
 
-        music.pause();
+if (openCard && music) {
+
+    openCard.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        // Start the song from 44 seconds
+        if (!musicStarted) {
+            music.currentTime = 44;
+            musicStarted = true;
+        }
+
+        music.play()
+            .then(() => {
+
+                musicBtn.innerHTML = "❚❚";
+
+            })
+            .catch((error) => {
+
+                console.log("Music could not play:", error);
+
+            });
+
+    });
+
+}
+
+
+/* -----------------------------------------
+   MUSIC PLAY / PAUSE BUTTON
+----------------------------------------- */
+
+if (musicBtn && music) {
+
+    musicBtn.addEventListener("click", function () {
+
+        if (music.paused) {
+
+            music.play()
+                .then(() => {
+
+                    musicBtn.innerHTML = "❚❚";
+
+                })
+                .catch((error) => {
+
+                    console.log("Music could not play:", error);
+
+                });
+
+        } else {
+
+            music.pause();
+
+            musicBtn.innerHTML = "♫";
+
+        }
+
+    });
+
+}
+
+
+/* -----------------------------------------
+   UPDATE BUTTON WHEN MUSIC ENDS
+----------------------------------------- */
+
+if (music) {
+
+    music.addEventListener("ended", function () {
 
         musicBtn.innerHTML = "♫";
 
-        musicPlaying = false;
+        musicStarted = false;
 
-    } else {
+    });
 
-        music.play();
-
-        musicBtn.innerHTML = "❚❚";
-
-        musicPlaying = true;
-
-    }
-
-});
+}
 
 
 
